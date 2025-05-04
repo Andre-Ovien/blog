@@ -11,7 +11,7 @@
 <div class="container mt-4">
 {% if registered %}
 <div class="alert alert-success">Registration completed successfully
-    <a href="#">Login</a>
+    <a href="{% url 'login' %}">Login</a>
 </div>
 
 {% else %}
@@ -22,7 +22,7 @@
     <br>
     <button type="submit" class="btn btn-success btn-sm">Sign Up</button>
 </form><br>
-<p>Have an account? <a href="#">Login</a><p>
+<p>Have an account? <a href="{% url 'login' %}">Login</a><p>
 {% endif %}
 </div>
 
