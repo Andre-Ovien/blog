@@ -29,6 +29,9 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+          </li>
           {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'sign_up' %}">Sign Up</a>
@@ -40,7 +43,7 @@
         </ul>
       </div>
     </div>
-  </nav>
+  </nav><br>
   
 
   <div class="container"> 
