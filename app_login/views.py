@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, UserProfileChange
+from .forms import SignUpForm, UserProfileChange, ProfilePic
 
 def sign_up(request):
     form = SignUpForm()
@@ -79,3 +79,33 @@ def password_update(request):
         'change': change
     }
     return render(request,'app_login/password.html',context)
+
+@login_required
+def add_picture(request):
+    form = ProfilePic()
+
+    if request.method == 'POST':
+        form = ProfilePic(request.POST, request.FILES)
+        if form.is_valid():
+            user_obj = form.save(commit=False)
+            user_obj.user = request.user
+            user_obj.save() 
+            return redirect('profile')
+
+    context={
+        'form': form
+    }
+    return render(request,'app_login/picture.html', context)
+
+@login_required
+def change_dp(request):
+    form = ProfilePic(instance=request.user.user_profile)
+    if request.method == "POST":
+        form = ProfilePic(request.POST, request.FILES, instance=request.user.user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    context = {
+        'form': form
+    }
+    return render(request,'app_login/picture.html',context)
