@@ -8,6 +8,16 @@
 {% block body %}
 
 <h3>Your Profile</h3>
+{% if user.user_profile %}
+<img src="/media/{{ user.user_profile.profile_picture }}" class="rounded-circle" width="150" height="150" alt=""><br>
+<br>
+<p><a href="{% url 'change_dp' %}" class="btn btn-info btn-sm">Change Profile Picture</a></p>
+{% else %}
+<img src="/media/default-profile-picture1.jpg" class="rounded-circle" width="150" height="150" alt=""><br>
+<br>
+<p><a href="{% url 'picture' %}" class="btn btn-info btn-sm">Change Profile Picture</a></p>
+{% endif %}
+<br>
 <p>Username: {{ user.username }}</p>
 <p>Email: {{ user.email }}</p>
 <p>Name: {{ user.first_name }} {{ user.last_name }}</p><br>
