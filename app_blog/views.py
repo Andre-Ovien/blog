@@ -5,14 +5,15 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
+from django.http import HttpResponseRedirect
+from django.utils.text import slugify
 
 # Create your views here.
 
-def blog_list(request):
-    context={
-        
-    }
-    return render(request, 'app_blog/blog_list.html', context)
+class BlogList(ListView):
+    context_object_name = 'blogs'
+    model = Blog
+    template_name = "app_blog/blog_list.html"
 
 
 class CreateBlog(LoginRequiredMixin,CreateView):
@@ -24,6 +25,6 @@ class CreateBlog(LoginRequiredMixin,CreateView):
         blog_obj = form.save(commit=False)
         blog_obj.author = self.request.user
         title = blog_obj.blog_title
-        blog_obj.slug = title.replace("","-") + "-" + str(uuid.uuid4())
+        blog_obj.slug = slugify(title) + "-" + str(uuid.uuid4())
         blog_obj.save()
-        return redirect('index')
+        return HttpResponseRedirect(reverse('index'))
