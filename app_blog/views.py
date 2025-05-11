@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
+from .forms import CommentForm
 
 # Create your views here.
 
@@ -36,7 +37,19 @@ def form_valid(self, form):
 
 def blog_details(request, slug):
     blog = Blog.objects.get(slug=slug)
+    comment_form = CommentForm()
+    if request.method == "POST":
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.user = request.user
+            comment.blog = blog
+            comment.save()
+            return HttpResponseRedirect(reverse('blog_details',kwargs={'slug':slug}))
+
+
     context = {
-        'blog': blog
+        'blog': blog,
+        'comment_form': comment_form
     }
     return render(request, 'app_blog/blog_details.html', context)
