@@ -21,10 +21,22 @@ class CreateBlog(LoginRequiredMixin,CreateView):
     template_name = "app_blog/create_blog.html"
     fields = ('blog_title','blog_content','blog_image')
 
-    def form_valid(self, form):
-        blog_obj = form.save(commit=False)
-        blog_obj.author = self.request.user
-        title = blog_obj.blog_title
-        blog_obj.slug = slugify(title) + "-" + str(uuid.uuid4())
-        blog_obj.save()
-        return HttpResponseRedirect(reverse('index'))
+    from django.utils.text import slugify
+import uuid
+
+def form_valid(self, form):
+    blog_obj = form.save(commit=False)
+    blog_obj.author = self.request.user
+    title = blog_obj.blog_title
+    unique_id = str(uuid.uuid4())[:8]  
+    blog_obj.slug = f"{slugify(title)}-{unique_id}"
+    blog_obj.save()
+    return HttpResponseRedirect(reverse('index'))
+
+
+def blog_details(request, slug):
+    blog = Blog.objects.get(slug=slug)
+    context = {
+        'blog': blog
+    }
+    return render(request, 'app_blog/blog_details.html', context)
